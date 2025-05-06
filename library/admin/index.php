@@ -1,11 +1,11 @@
 <?php
 session_start();
-include('includes/config.php');
+include('../includes/config.php');
 if(isset($_POST['login']))
 {
 $username=$_POST['username'];
 $password=md5($_POST['password']);
-$sql ="SELECT UserName,Password FROM admin WHERE UserName=:username and Password=:password";
+$sql ="SELECT username, password FROM tbladmin WHERE username=:username and password=:password";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':username', $username, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
@@ -40,7 +40,7 @@ echo "<script>alert('Invalid Details');</script>";
 </head>
 <body>
     <!------MENU SECTION START-->
-<?php include('includes/header.php');?>
+<?php include('../includes/header.php');?>
 <!-- MENU SECTION END-->
 <div class="content-wrapper">
 <div class="container">
@@ -80,7 +80,7 @@ echo "<script>alert('Invalid Details');</script>";
     </div>
     </div>
      <!-- CONTENT-WRAPPER SECTION END-->
- <?php include('includes/footer.php');?>
+ <?php include('../includes/footer.php');?>
       <!-- FOOTER SECTION END-->
     <script src="assets/js/jquery-1.10.2.js"></script>
     <!-- BOOTSTRAP SCRIPTS  -->

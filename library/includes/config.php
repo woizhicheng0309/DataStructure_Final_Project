@@ -1,4 +1,8 @@
 <?php 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // DB credentials.
 define('DB_HOST','localhost');
 define('DB_USER','root');

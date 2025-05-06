@@ -1,8 +1,8 @@
-   <section class="footer-section">
+<section class="footer-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                   &copy; 2019 Online Library Management System |<a href="https://github.com/kumarpandule2000" target="_blank"  > Designed by : Kumar Pandule</a> 
+                   &copy; 2025 系网数据库 | 设计者: 魏志成 & 贝俊德
                 </div>
 
             </div>

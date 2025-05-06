@@ -1,0 +1,165 @@
+-- 老師 (Teachers)
+CREATE TABLE 老師 (
+    老師編號 INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    信箱 VARCHAR(100),
+    分機 VARCHAR(10),
+    學歷 VARCHAR(100),
+    課表時間 VARCHAR(100),
+    專長 VARCHAR(255),
+    類別 VARCHAR(50)
+);
+
+-- 老師校內經歷 (Internal Experience)
+CREATE TABLE 老師校內經歷 (
+    老師編號 INT,
+    部門 VARCHAR(100),
+    職位 VARCHAR(100),
+    PRIMARY KEY (老師編號, 部門, 職位),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師校外經歷 (External Experience)
+CREATE TABLE 老師校外經歷 (
+    老師編號 INT,
+    機構名稱 VARCHAR(100),
+    職位 VARCHAR(100),
+    PRIMARY KEY (老師編號, 機構名稱, 職位),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 論文 (Papers) — UPDATED STRUCTURE
+CREATE TABLE 論文 (
+    論文標號 INT PRIMARY KEY,
+    論文編號 VARCHAR(100),
+    發表日期 DATE,
+    論文標題 VARCHAR(255),
+    老師編號 INT,
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 會議論文 (Conference Papers)
+CREATE TABLE 會議論文 (
+    論文標號 INT PRIMARY KEY,
+    會議名稱 VARCHAR(255),
+    會議地點 VARCHAR(100),
+    發佈日期 DATE,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 期刊論文 (Journal Papers)
+CREATE TABLE 期刊論文 (
+    論文標號 INT PRIMARY KEY,
+    期刊名字 VARCHAR(255),
+    發佈日期 DATE,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 專書論文 (Book Papers)
+CREATE TABLE 專書論文 (
+    論文標號 INT PRIMARY KEY,
+    書名 VARCHAR(255),
+    ISBN VARCHAR(50),
+    出版社 VARCHAR(100),
+    出版年份 INT,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 學生 (Students)
+CREATE TABLE 學生 (
+    學生學號 INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    系所 VARCHAR(100),
+    班級 VARCHAR(50)
+);
+
+-- 學生參賽 (Student Competition Participation)
+CREATE TABLE 學生參賽 (
+    隊伍編號 INT,
+    組員學號 INT,
+    老師編號 INT,
+    獲獎記錄編號 INT,
+    比賽名字 VARCHAR(100),
+    參賽類別 VARCHAR(50),
+    PRIMARY KEY (隊伍編號, 組員學號, 老師編號),
+    FOREIGN KEY (組員學號) REFERENCES 學生(學生學號),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師帶隊獲獎 (Teacher-Led Awards)
+CREATE TABLE 老師帶隊獲獎 (
+    老師編號 INT,
+    獲獎記錄編號 INT,
+    PRIMARY KEY (老師編號, 獲獎記錄編號),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 核准專利 (Patents)
+CREATE TABLE 核准專利 (
+    專利編號 INT PRIMARY KEY,
+    老師編號 INT,
+    名稱 VARCHAR(255),
+    類型 VARCHAR(100),
+    申請日期 DATE,
+    核准日期 DATE,
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師演講 (Lectures)
+CREATE TABLE 老師演講 (
+    老師編號 INT,
+    演講名稱 VARCHAR(255),
+    地點 VARCHAR(100),
+    日期 DATE,
+    PRIMARY KEY (老師編號, 演講名稱),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師計劃 (Research Projects)
+CREATE TABLE 老師計劃 (
+    計劃編號 INT PRIMARY KEY,
+    老師編號 INT,
+    分類 VARCHAR(50),
+    研究主題 VARCHAR(255),
+    研究開始日期 DATE,
+    研究結束日期 DATE,
+    資助機構 VARCHAR(100),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師專長 (Expertise)
+CREATE TABLE 老師專長 (
+    老師編號 INT,
+    專長項目 VARCHAR(100),
+    PRIMARY KEY (老師編號, 專長項目),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師課表 (Class Schedules) — ADDED 上課教室
+CREATE TABLE 老師課表 (
+    老師編號 INT,
+    上課時間 VARCHAR(100),
+    上課教室 VARCHAR(100),
+    PRIMARY KEY (老師編號, 上課時間),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- Table structure for `tbladmin`
+CREATE TABLE `tbladmin` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(100) DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert default admin credentials into `tbladmin`
+INSERT INTO `tbladmin` (`username`, `password`, `email`) VALUES
+('admin', 'admin123', 'admin@example.com');
+
+-- Update default admin credentials with hashed password
+UPDATE `tbladmin` SET `password` = MD5('admin123') WHERE `username` = 'admin';
