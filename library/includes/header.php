@@ -1,75 +1,39 @@
-<div class="navbar navbar-inverse set-radius-zero" >
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" >
-
-                    <img src="assets/img/logo.png" />
-                </a>
-
-            </div>
-<?php if($_SESSION['login'])
-{
-?> 
-            <div class="right-div">
-                <a href="logout.php" class="btn btn-danger pull-right">LOG ME OUT</a>
-            </div>
-            <?php }?>
+<!-- Updated header to ensure the title 'University Network' is visible -->
+<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="index.php">University Network</a>
+    </div>
+    <div class="header-right">
+        <a href="logout.php" class="btn btn-danger" title="Logout">Logout</a>
+    </div>
+</nav>
+<!-- MENU SECTION -->
+<nav class="navbar navbar-inverse set-radius-zero" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="dashboard.php">
+                <!-- Updated text color to black for visibility -->
+                <h1 style="color: black; font-size: 24px;">University Network</h1>
+            </a>
         </div>
     </div>
-    <!-- LOGO HEADER END-->
-<?php if($_SESSION['login'])
-{
-?>    
+</nav>
+<!-- LOGO HEADER END-->
 <section class="menu-section">
-        <div class="container">
-            <div class="row ">
-                <div class="col-md-12">
-                    <div class="navbar-collapse collapse ">
-                        <ul id="menu-top" class="nav navbar-nav navbar-right">
-                            <li><a href="dashboard.php" class="menu-top-active">DASHBOARD</a></li>
-                           
-                          
-   <li>
-                                <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown"> Account <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="my-profile.php">My Profile</a></li>
-                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="change-password.php">Change Password</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="issued-books.php">Issued Books</a></li>
-                          
-
-                        </ul>
-                    </div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="navbar-collapse collapse ">
+                    <ul id="menu-top" class="nav navbar-nav navbar-right">
+                        <li><a href="dashboard.php">Dashboard</a></li>
+                        <li><a href="manage-professors.php">Manage Professors</a></li>
+                        <li><a href="manage-students.php">Manage Students</a></li>
+                        <li><a href="manage-research-projects.php">Manage Research Projects</a></li>
+                        <li><a href="manage-publications.php">Manage Publications</a></li>
+                        <li><a href="manage-teaching-assignments.php">Manage Teaching Assignments</a></li>
+                    </ul>
                 </div>
-
             </div>
         </div>
-    </section>
-    <?php } else { ?>
-        <section class="menu-section">
-        <div class="container">
-            <div class="row ">
-                <div class="col-md-12">
-                    <div class="navbar-collapse collapse ">
-                        <ul id="menu-top" class="nav navbar-nav navbar-right">                        
-                          
-  <li><a href="adminlogin.php">Admin Login</a></li>
-                            <li><a href="signup.php">User Signup</a></li>
-                             <li><a href="index.php">User Login</a></li>
-                          
-
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <?php } ?>
+    </div>
+</section>

@@ -174,6 +174,84 @@ INSERT INTO `tblstudents` (`id`, `StudentId`, `FullName`, `EmailId`, `MobileNumb
 (9, 'SID010', 'Amit', 'amit@gmail.com', '8585856224', 'f925916e2754e5e03f75dd58a5733251', 1, '2017-07-15 13:40:30', NULL),
 (10, 'SID011', 'Sarita Pandey', 'sarita@gmail.com', '4672423754', 'f925916e2754e5e03f75dd58a5733251', 1, '2017-07-15 18:00:59', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblprofessors`
+--
+
+CREATE TABLE `tblprofessors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ProfessorId` varchar(100) NOT NULL,
+  `FullName` varchar(120) NOT NULL,
+  `Email` varchar(120) NOT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Specialization` varchar(255) DEFAULT NULL,
+  `RegDate` timestamp NULL DEFAULT current_timestamp(),
+  `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ProfessorId` (`ProfessorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblresearchprojects`
+--
+
+CREATE TABLE `tblresearchprojects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ProjectId` varchar(100) NOT NULL,
+  `ProfessorId` varchar(100) NOT NULL,
+  `Title` varchar(255) NOT NULL,
+  `StartDate` date DEFAULT NULL,
+  `EndDate` date DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `RegDate` timestamp NULL DEFAULT current_timestamp(),
+  `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpublications`
+--
+
+CREATE TABLE `tblpublications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PublicationId` varchar(100) NOT NULL,
+  `ProfessorId` varchar(100) NOT NULL,
+  `Type` varchar(50) DEFAULT NULL,
+  `Title` varchar(255) NOT NULL,
+  `PublicationDate` date DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `RegDate` timestamp NULL DEFAULT current_timestamp(),
+  `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblteachingassignments`
+--
+
+CREATE TABLE `tblteachingassignments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `AssignmentId` varchar(100) NOT NULL,
+  `ProfessorId` varchar(100) NOT NULL,
+  `CourseName` varchar(255) NOT NULL,
+  `Classroom` varchar(50) DEFAULT NULL,
+  `Schedule` varchar(255) DEFAULT NULL,
+  `RegDate` timestamp NULL DEFAULT current_timestamp(),
+  `UpdationDate` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -216,6 +294,34 @@ ALTER TABLE `tblstudents`
   ADD UNIQUE KEY `StudentId` (`StudentId`);
 
 --
+-- Indexes for table `tblprofessors`
+--
+ALTER TABLE `tblprofessors`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ProfessorId` (`ProfessorId`);
+
+--
+-- Indexes for table `tblresearchprojects`
+--
+ALTER TABLE `tblresearchprojects`
+  ADD PRIMARY KEY (`id`),
+  ADD FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`);
+
+--
+-- Indexes for table `tblpublications`
+--
+ALTER TABLE `tblpublications`
+  ADD PRIMARY KEY (`id`),
+  ADD FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`);
+
+--
+-- Indexes for table `tblteachingassignments`
+--
+ALTER TABLE `tblteachingassignments`
+  ADD PRIMARY KEY (`id`),
+  ADD FOREIGN KEY (`ProfessorId`) REFERENCES `tblprofessors`(`ProfessorId`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -254,6 +360,31 @@ ALTER TABLE `tblissuedbookdetails`
 --
 ALTER TABLE `tblstudents`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `tblprofessors`
+--
+ALTER TABLE `tblprofessors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tblresearchprojects`
+--
+ALTER TABLE `tblresearchprojects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tblpublications`
+--
+ALTER TABLE `tblpublications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tblteachingassignments`
+--
+ALTER TABLE `tblteachingassignments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
