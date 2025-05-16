@@ -25,7 +25,7 @@
                     <ul id="menu-top" class="nav navbar-nav navbar-right">
                         <li><a href="dashboard.php">仪表板</a></li>
                         <li><a href="manage-professors.php">管理教授</a></li>
-                        <li><a href="reg-students.php">管理學生</a></li>
+                        <li><a href="manage-students.php">管理學生</a></li>
                     </ul>
                 </div>
             </div>
