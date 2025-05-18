@@ -19,11 +19,11 @@ if (!isset($_SESSION['delmsg'])) {
     <meta name="author" content="" />
     <title>管理老師</title>
     <!-- BOOTSTRAP CORE STYLE  -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
-    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
     <!-- CUSTOM STYLE  -->
-    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <style>
@@ -129,10 +129,31 @@ if (!isset($_SESSION['delmsg'])) {
                                         </tr>
                                     </thead>
                                     <tbody id="studentsTbody">
-                                        <!-- 這裡將來可放查詢結果或資料列 -->
-                                        <tr>
-                                            <td colspan="9" class="text-center">請使用上方按鈕新增、查詢老師資料</td>
-                                        </tr>
+                                    <?php
+                                    // 查詢所有老師資料
+                                    $stmt = $dbh->query("SELECT * FROM 老師");
+                                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    if (count($teachers) > 0) {
+                                        foreach ($teachers as $row) {
+                                            echo '<tr>';
+                                            echo '<td>' . htmlspecialchars($row['老師編號']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['姓名']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['信箱']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['分機']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['學歷']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['課表時間']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['專長']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['類別']) . '</td>';
+                                            echo '<td>';
+                                            echo '<button class="btn btn-primary btn-xs edit-btn"><i class="fa fa-edit"></i> 修改</button> ';
+                                            echo '<button class="btn btn-danger btn-xs delete-btn"><i class="fa fa-trash-o"></i> 刪除</button>';
+                                            echo '</td>';
+                                            echo '</tr>';
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="9" class="text-center">請使用上方按鈕新增、查詢老師資料</td></tr>';
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -145,11 +166,11 @@ if (!isset($_SESSION['delmsg'])) {
     <!-- CONTENT-WRAPPER SECTION END-->
     <?php include('../includes/footer.php');?>
     <!-- FOOTER SECTION END-->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="../assets/js/jquery-1.10.2.js"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script src="../assets/js/bootstrap.js"></script>
     <!-- CUSTOM SCRIPTS  -->
-    <script src="assets/js/custom.js"></script>
+    <script src="../assets/js/custom.js"></script>
     <script>
         document.getElementById('showAddForm').onclick = function() {
             document.getElementById('addFormContainer').style.display = 'block';
@@ -160,65 +181,61 @@ if (!isset($_SESSION['delmsg'])) {
             document.getElementById('showAddForm').style.display = 'inline-block';
         };
 
-        // 修改功能腳本
-        function createEditButton(tr) {
-            var btn = document.createElement('button');
-            btn.className = 'btn btn-primary btn-xs edit-btn';
-            btn.style.marginRight = '8px'; // 增加右側間距
-            btn.innerHTML = '<i class="fa fa-edit"></i> 修改';
-            btn.onclick = function() {
-                // 取得目前資料
-                var tds = tr.getElementsByTagName('td');
-                var studentId = tds[0].innerText;
-                var name = tds[1].innerText;
-                var email = tds[2].innerText;
-                var extension = tds[3].innerText;
-                var education = tds[4].innerText;
-                var schedule = tds[5].innerText;
-                var specialty = tds[6].innerText;
-                var category = tds[7].innerText;
-                // 將資料填入表單
-                document.getElementById('student_id').value = studentId;
-                document.getElementById('name').value = name;
-                document.getElementById('email').value = email;
-                document.getElementById('extension').value = extension;
-                document.getElementById('education').value = education;
-                document.getElementById('schedule').value = schedule;
-                document.getElementById('specialty').value = specialty;
-                document.getElementById('category').value = category;
-                document.getElementById('addFormContainer').style.display = 'block';
-                document.getElementById('showAddForm').style.display = 'none';
-                // 編輯狀態標記
-                document.getElementById('addStudentForm').setAttribute('data-editing', 'true');
-                document.getElementById('addStudentForm').setAttribute('data-edit-index', tr.rowIndex);
-            };
-            return btn;
-        }
-
-        // 刪除功能腳本
-        function createDeleteButton(tr) {
-            var btn = document.createElement('button');
-            btn.className = 'btn btn-danger btn-xs delete-btn';
-            btn.style.marginLeft = '0px';
-            btn.innerHTML = '<i class="fa fa-trash-o"></i> 刪除'; // 改用舊版垃圾桶圖示
-            btn.onclick = function() {
-                if(confirm('確定要刪除這位老師嗎？')) {
-                    tr.parentNode.removeChild(tr);
-                    // 重新編號
-                    var tbody = document.getElementById('studentsTbody');
-                    Array.from(tbody.children).forEach(function(row, idx) {
-                        if(row.children.length && !row.children[0].hasAttribute('colspan')) row.children[0].innerText = idx+1;
-                    });
+        // 綁定現有資料列的修改/刪除事件
+        function bindTableRowButtons() {
+            var tbody = document.getElementById('studentsTbody');
+            Array.from(tbody.children).forEach(function(tr) {
+                var editBtn = tr.querySelector('.edit-btn');
+                var deleteBtn = tr.querySelector('.delete-btn');
+                if (editBtn) {
+                    editBtn.onclick = function() {
+                        var tds = tr.getElementsByTagName('td');
+                        document.getElementById('student_id').value = tds[0].innerText;
+                        document.getElementById('name').value = tds[1].innerText;
+                        document.getElementById('email').value = tds[2].innerText;
+                        document.getElementById('extension').value = tds[3].innerText;
+                        document.getElementById('education').value = tds[4].innerText;
+                        document.getElementById('schedule').value = tds[5].innerText;
+                        document.getElementById('specialty').value = tds[6].innerText;
+                        document.getElementById('category').value = tds[7].innerText;
+                        document.getElementById('addFormContainer').style.display = 'block';
+                        document.getElementById('showAddForm').style.display = 'none';
+                        document.getElementById('addStudentForm').setAttribute('data-editing', 'true');
+                        document.getElementById('addStudentForm').setAttribute('data-edit-index', tr.rowIndex);
+                    };
                 }
-            };
-            return btn;
+                if (deleteBtn) {
+                    deleteBtn.onclick = function() {
+                        if(confirm('確定要刪除這位老師嗎？')) {
+                            var teacherId = tr.cells[0].innerText;
+                            var formData = new FormData();
+                            formData.append('action', 'delete');
+                            formData.append('teacher_id', teacherId);
+                            fetch('manage-professors-api.php', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    alert('刪除成功！');
+                                    tr.parentNode.removeChild(tr);
+                                } else {
+                                    alert('刪除失敗：' + (data.msg || ''));
+                                }
+                            });
+                        }
+                    };
+                }
+            });
         }
+        bindTableRowButtons();
 
-        // 新老師資料並即時顯示在表格
+        // 新增/修改老師時同步資料庫
         var addForm = document.getElementById('addStudentForm');
         addForm.onsubmit = function(e) {
             e.preventDefault();
-            var studentId = document.getElementById('student_id').value;
+            var teacherId = document.getElementById('student_id').value;
             var name = document.getElementById('name').value;
             var email = document.getElementById('email').value;
             var extension = document.getElementById('extension').value;
@@ -226,57 +243,35 @@ if (!isset($_SESSION['delmsg'])) {
             var schedule = document.getElementById('schedule').value;
             var specialty = document.getElementById('specialty').value;
             var category = document.getElementById('category').value;
-            var tbody = document.getElementById('studentsTbody');
-            // 編輯狀態
             var isEditing = addForm.getAttribute('data-editing') === 'true';
-            var editIndex = addForm.getAttribute('data-edit-index');
-            if(isEditing && editIndex) {
-                // 修改現有列
-                var tr = tbody.rows[editIndex-1];
-                tr.cells[0].innerText = studentId;
-                tr.cells[1].innerText = name;
-                tr.cells[2].innerText = email;
-                tr.cells[3].innerText = extension;
-                tr.cells[4].innerText = education;
-                tr.cells[5].innerText = schedule;
-                tr.cells[6].innerText = specialty;
-                tr.cells[7].innerText = category;
-                // 重建操作欄
-                var actionTd = tr.cells[8];
-                actionTd.innerHTML = '';
-                actionTd.appendChild(createEditButton(tr));
-                actionTd.appendChild(createDeleteButton(tr));
-                // 清除編輯狀態
-                addForm.removeAttribute('data-editing');
-                addForm.removeAttribute('data-edit-index');
-            } else {
-                // 移除預設提示列
-                var defaultRow = document.querySelector('#studentsTbody tr td[colspan]');
-                if(defaultRow) tbody.removeChild(defaultRow.parentNode);
-                // 新增資料列
-                var tr = document.createElement('tr');
-                tr.innerHTML = '<td>' + studentId + '</td>' +
-                               '<td>' + name + '</td>' +
-                               '<td>' + email + '</td>' +
-                               '<td>' + extension + '</td>' +
-                               '<td>' + education + '</td>' +
-                               '<td>' + schedule + '</td>' +
-                               '<td>' + specialty + '</td>' +
-                               '<td>' + category + '</td>' +
-                               '<td></td>';
-                // 加入修改按鈕
-                tr.cells[8].appendChild(createEditButton(tr));
-                tr.cells[8].appendChild(createDeleteButton(tr));
-                tbody.appendChild(tr);
-            }
-            // 重新編號
-            Array.from(tbody.children).forEach(function(row, idx) {
-                if(row.children.length && !row.children[0].hasAttribute('colspan')) row.children[0].innerText = idx+1;
+            var formData = new FormData();
+            formData.append('teacher_id', teacherId);
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('extension', extension);
+            formData.append('education', education);
+            formData.append('schedule', schedule);
+            formData.append('specialty', specialty);
+            formData.append('category', category);
+            formData.append('action', isEditing ? 'edit' : 'add');
+            fetch('manage-professors-api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(isEditing ? '修改成功！' : '新增成功！');
+                    addForm.reset();
+                    addForm.removeAttribute('data-editing');
+                    addForm.removeAttribute('data-edit-index');
+                    document.getElementById('addFormContainer').style.display = 'none';
+                    document.getElementById('showAddForm').style.display = 'inline-block';
+                    location.reload();
+                } else {
+                    alert((isEditing ? '修改' : '新增') + '失敗：' + (data.msg || ''));
+                }
             });
-            // 清空表單並隱藏
-            this.reset();
-            document.getElementById('addFormContainer').style.display = 'none';
-            document.getElementById('showAddForm').style.display = 'inline-block';
         };
 
         document.getElementById('showSearchForm').onclick = function() {
