@@ -203,10 +203,12 @@ if (!isset($_SESSION['delmsg'])) {
                             if(confirm('確定要刪除這筆學生參賽資料嗎？')) {
                                 var teamId = tr.cells[0].innerText;
                                 var memberId = tr.cells[1].innerText;
+                                var teacherId = tr.cells[2].innerText; // 加入老師編號
                                 var formData = new FormData();
                                 formData.append('action', 'delete');
                                 formData.append('team_id', teamId);
                                 formData.append('member_id', memberId);
+                                formData.append('teacher_id', teacherId); // 傳送老師編號
                                 fetch('./manage-mentored-awards-api.php', {
                                     method: 'POST',
                                     body: formData
