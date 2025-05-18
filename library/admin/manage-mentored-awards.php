@@ -19,11 +19,11 @@ if (!isset($_SESSION['delmsg'])) {
     <meta name="author" content="" />
     <title>管理學生參賽</title>
     <!-- BOOTSTRAP CORE STYLE  -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
-    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
     <!-- CUSTOM STYLE  -->
-    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <style>
@@ -65,7 +65,7 @@ if (!isset($_SESSION['delmsg'])) {
                         </div>
                         <div class="panel-body">
                             <div id="addFormContainer" style="display:none; margin-bottom:20px;">
-                                <form id="addStudentForm" class="form-inline" method="post" action="">
+                                <form id="addStudentForm" class="form-inline">
                                     <div class="form-group">
                                         <label for="team_id">隊伍編號:</label>
                                         <input type="text" class="form-control" id="team_id" name="team_id" required>
@@ -127,9 +127,29 @@ if (!isset($_SESSION['delmsg'])) {
                                         </tr>
                                     </thead>
                                     <tbody id="studentsTbody">
-                                        <tr>
-                                            <td colspan="7" class="text-center">請使用上方按鈕新增、查詢學生參賽資料</td>
-                                        </tr>
+                                    <?php
+                                    // 查詢所有學生參賽資料
+                                    $stmt = $dbh->query("SELECT * FROM 學生參賽");
+                                    $awards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    if (count($awards) > 0) {
+                                        foreach ($awards as $row) {
+                                            echo '<tr>';
+                                            echo '<td>' . htmlspecialchars($row['隊伍編號']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['組員學號']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['老師編號']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['獲獎記錄編號']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['比賽名字']) . '</td>';
+                                            echo '<td>' . htmlspecialchars($row['參賽類別']) . '</td>';
+                                            echo '<td>';
+                                            echo '<button class="btn btn-primary btn-xs edit-btn"><i class="fa fa-edit"></i> 修改</button> ';
+                                            echo '<button class="btn btn-danger btn-xs delete-btn"><i class="fa fa-trash-o"></i> 刪除</button>';
+                                            echo '</td>';
+                                            echo '</tr>';
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="7" class="text-center">請使用上方按鈕新增、查詢學生參賽資料</td></tr>';
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -142,190 +162,177 @@ if (!isset($_SESSION['delmsg'])) {
     <!-- CONTENT-WRAPPER SECTION END-->
     <?php include('../includes/footer.php');?>
     <!-- FOOTER SECTION END-->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="../assets/js/jquery-1.10.2.js"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script src="../assets/js/bootstrap.js"></script>
     <!-- CUSTOM SCRIPTS  -->
-    <script src="assets/js/custom.js"></script>
     <script>
-        document.getElementById('showAddForm').onclick = function() {
-            document.getElementById('addFormContainer').style.display = 'block';
-            this.style.display = 'none';
-        };
-        document.getElementById('cancelAddForm').onclick = function() {
-            document.getElementById('addFormContainer').style.display = 'none';
-            document.getElementById('showAddForm').style.display = 'inline-block';
-        };
-
-        // 修改功能腳本
-        function createEditButton(tr) {
-            var btn = document.createElement('button');
-            btn.className = 'btn btn-primary btn-xs edit-btn';
-            btn.style.marginRight = '8px'; // 增加右側間距
-            btn.innerHTML = '<i class="fa fa-edit"></i> 修改';
-            btn.onclick = function() {
-                // 取得目前資料
-                var tds = tr.getElementsByTagName('td');
-                var teamId = tds[0].innerText;
-                var memberId = tds[1].innerText;
-                var teacherId = tds[2].innerText;
-                var awardId = tds[3].innerText;
-                var competitionName = tds[4].innerText;
-                var category = tds[5].innerText;
-                // 將資料填入表單
-                document.getElementById('team_id').value = teamId;
-                document.getElementById('member_id').value = memberId;
-                document.getElementById('teacher_id').value = teacherId;
-                document.getElementById('award_id').value = awardId;
-                document.getElementById('competition_name').value = competitionName;
-                document.getElementById('category').value = category;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('showAddForm').onclick = function() {
                 document.getElementById('addFormContainer').style.display = 'block';
-                document.getElementById('showAddForm').style.display = 'none';
-                // 編輯狀態標記
-                document.getElementById('addStudentForm').setAttribute('data-editing', 'true');
-                document.getElementById('addStudentForm').setAttribute('data-edit-index', tr.rowIndex);
+                this.style.display = 'none';
             };
-            return btn;
-        }
-
-        // 刪除功能腳本
-        function createDeleteButton(tr) {
-            var btn = document.createElement('button');
-            btn.className = 'btn btn-danger btn-xs delete-btn';
-            btn.style.marginLeft = '0px';
-            btn.innerHTML = '<i class="fa fa-trash-o"></i> 刪除'; // 改用舊版垃圾桶圖示
-            btn.onclick = function() {
-                if(confirm('確定要刪除這位學生參賽資料嗎？')) {
-                    tr.parentNode.removeChild(tr);
-                    // 重新編號
-                    var tbody = document.getElementById('studentsTbody');
-                    Array.from(tbody.children).forEach(function(row, idx) {
-                        if(row.children.length && !row.children[0].hasAttribute('colspan')) row.children[0].innerText = idx+1;
-                    });
-                }
+            document.getElementById('cancelAddForm').onclick = function() {
+                document.getElementById('addFormContainer').style.display = 'none';
+                document.getElementById('showAddForm').style.display = 'inline-block';
             };
-            return btn;
-        }
 
-        // 新增學生參賽資料並即時顯示在表格
-        var addForm = document.getElementById('addStudentForm');
-        addForm.onsubmit = function(e) {
-            e.preventDefault();
-            var teamId = document.getElementById('team_id').value;
-            var memberId = document.getElementById('member_id').value;
-            var teacherId = document.getElementById('teacher_id').value;
-            var awardId = document.getElementById('award_id').value;
-            var competitionName = document.getElementById('competition_name').value;
-            var category = document.getElementById('category').value;
-            var tbody = document.getElementById('studentsTbody');
-            // 編輯狀態
-            var isEditing = addForm.getAttribute('data-editing') === 'true';
-            var editIndex = addForm.getAttribute('data-edit-index');
-            if(isEditing && editIndex) {
-                // 修改現有列
-                var tr = tbody.rows[editIndex-1];
-                tr.cells[0].innerText = teamId;
-                tr.cells[1].innerText = memberId;
-                tr.cells[2].innerText = teacherId;
-                tr.cells[3].innerText = awardId;
-                tr.cells[4].innerText = competitionName;
-                tr.cells[5].innerText = category;
-                // 重建操作欄
-                var actionTd = tr.cells[6];
-                actionTd.innerHTML = '';
-                actionTd.appendChild(createEditButton(tr));
-                actionTd.appendChild(createDeleteButton(tr));
-                // 清除編輯狀態
-                addForm.removeAttribute('data-editing');
-                addForm.removeAttribute('data-edit-index');
-            } else {
-                // 移除預設提示列
-                var defaultRow = document.querySelector('#studentsTbody tr td[colspan]');
-                if(defaultRow) tbody.removeChild(defaultRow.parentNode);
-                // 新增資料列
-                var tr = document.createElement('tr');
-                tr.innerHTML = '<td>' + teamId + '</td>' +
-                               '<td>' + memberId + '</td>' +
-                               '<td>' + teacherId + '</td>' +
-                               '<td>' + awardId + '</td>' +
-                               '<td>' + competitionName + '</td>' +
-                               '<td>' + category + '</td>' +
-                               '<td></td>';
-                // 加入修改按鈕
-                tr.cells[6].appendChild(createEditButton(tr));
-                tr.cells[6].appendChild(createDeleteButton(tr));
-                tbody.appendChild(tr);
-            }
-            // 重新編號
-            Array.from(tbody.children).forEach(function(row, idx) {
-                if(row.children.length && !row.children[0].hasAttribute('colspan')) row.children[0].innerText = idx+1;
-            });
-            // 清空表單並隱藏
-            this.reset();
-            document.getElementById('addFormContainer').style.display = 'none';
-            document.getElementById('showAddForm').style.display = 'inline-block';
-        };
-
-        document.getElementById('showSearchForm').onclick = function() {
-            document.getElementById('searchFormContainer').style.display = 'block';
-            this.style.display = 'none';
-            document.getElementById('showAddForm').style.display = 'inline-block';
-        };
-        document.getElementById('cancelSearchForm').onclick = function() {
-            document.getElementById('searchFormContainer').style.display = 'none';
-            document.getElementById('showSearchForm').style.display = 'inline-block';
-        };
-
-        // 查詢學生參賽功能 (僅查詢本頁已新增的資料)
-        document.getElementById('searchStudentForm').onsubmit = function(e) {
-            e.preventDefault();
-            var searchTeamId = document.getElementById('search_team_id').value.trim();
-            var searchTeacherId = document.getElementById('search_teacher_id').value.trim();
-            var searchAwardId = document.getElementById('search_award_id').value.trim();
-            var rows = document.querySelectorAll('#studentsTbody tr');
-            var found = false;
-            var resultHtml = '';
-            // 先移除所有高亮
-            rows.forEach(function(row) {
-                row.classList.remove('search-highlight');
-                Array.from(row.children).forEach(function(td) {
-                    td.style.backgroundColor = '';
+            // 綁定現有資料列的修改/刪除事件
+            function bindTableRowButtons() {
+                var tbody = document.getElementById('studentsTbody');
+                Array.from(tbody.children).forEach(function(tr) {
+                    var editBtn = tr.querySelector('.edit-btn');
+                    var deleteBtn = tr.querySelector('.delete-btn');
+                    if (editBtn) {
+                        editBtn.onclick = function() {
+                            var tds = tr.getElementsByTagName('td');
+                            document.getElementById('team_id').value = tds[0].innerText;
+                            document.getElementById('member_id').value = tds[1].innerText;
+                            document.getElementById('teacher_id').value = tds[2].innerText;
+                            document.getElementById('award_id').value = tds[3].innerText;
+                            document.getElementById('competition_name').value = tds[4].innerText;
+                            document.getElementById('category').value = tds[5].innerText;
+                            document.getElementById('addFormContainer').style.display = 'block';
+                            document.getElementById('showAddForm').style.display = 'none';
+                            document.getElementById('addStudentForm').setAttribute('data-editing', 'true');
+                            document.getElementById('addStudentForm').setAttribute('data-edit-index', tr.rowIndex);
+                        };
+                    }
+                    if (deleteBtn) {
+                        deleteBtn.onclick = function() {
+                            if(confirm('確定要刪除這筆學生參賽資料嗎？')) {
+                                var teamId = tr.cells[0].innerText;
+                                var memberId = tr.cells[1].innerText;
+                                var formData = new FormData();
+                                formData.append('action', 'delete');
+                                formData.append('team_id', teamId);
+                                formData.append('member_id', memberId);
+                                fetch('./manage-mentored-awards-api.php', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        alert('刪除成功！');
+                                        tr.parentNode.removeChild(tr);
+                                    } else {
+                                        alert('刪除失敗：' + (data.msg || ''));
+                                    }
+                                })
+                                .catch(err => {
+                                    alert('網路或伺服器錯誤：' + err);
+                                });
+                            }
+                        };
+                    }
                 });
-            });
-            for (var i = 0; i < rows.length; i++) {
-                var tds = rows[i].getElementsByTagName('td');
-                if (tds.length && (
-                    (searchTeamId && tds[0].innerText === searchTeamId) ||
-                    (searchTeacherId && tds[2].innerText === searchTeacherId) ||
-                    (searchAwardId && tds[3].innerText === searchAwardId)
-                )) {
-                    found = true;
-                    // 滾動到該學生參賽資料列
-                    rows[i].scrollIntoView({behavior: 'smooth', block: 'center'});
-                    // 高亮整列
-                    rows[i].classList.add('search-highlight');
-                    Array.from(tds).forEach(function(td) {
-                        td.style.backgroundColor = '#ffe066';
+            }
+            bindTableRowButtons();
+
+            // 新增/修改學生參賽資料時同步資料庫
+            var addForm = document.getElementById('addStudentForm');
+            addForm.onsubmit = function(e) {
+                e.preventDefault();
+                var teamId = document.getElementById('team_id').value;
+                var memberId = document.getElementById('member_id').value;
+                var teacherId = document.getElementById('teacher_id').value;
+                var awardId = document.getElementById('award_id').value;
+                var competitionName = document.getElementById('competition_name').value;
+                var category = document.getElementById('category').value;
+                var isEditing = addForm.getAttribute('data-editing') === 'true';
+                var formData = new FormData();
+                formData.append('team_id', teamId);
+                formData.append('member_id', memberId);
+                formData.append('teacher_id', teacherId);
+                formData.append('award_id', awardId);
+                formData.append('competition_name', competitionName);
+                formData.append('category', category);
+                formData.append('action', isEditing ? 'edit' : 'add');
+                fetch('./manage-mentored-awards-api.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(isEditing ? '修改成功！' : '新增成功！');
+                        addForm.reset();
+                        addForm.removeAttribute('data-editing');
+                        addForm.removeAttribute('data-edit-index');
+                        document.getElementById('addFormContainer').style.display = 'none';
+                        document.getElementById('showAddForm').style.display = 'inline-block';
+                        location.reload();
+                    } else {
+                        alert((isEditing ? '修改失敗: ' : '新增失敗: ') + (data.msg || '') + '\n' + (data.errorInfo ? JSON.stringify(data.errorInfo) : ''));
+                    }
+                })
+                .catch(err => {
+                    alert('網路或伺服器錯誤：' + err);
+                });
+            };
+
+            document.getElementById('showSearchForm').onclick = function() {
+                document.getElementById('searchFormContainer').style.display = 'block';
+                this.style.display = 'none';
+                document.getElementById('showAddForm').style.display = 'inline-block';
+            };
+            document.getElementById('cancelSearchForm').onclick = function() {
+                document.getElementById('searchFormContainer').style.display = 'none';
+                document.getElementById('showSearchForm').style.display = 'inline-block';
+            };
+
+            // 查詢學生參賽功能 (僅查詢本頁已新增的資料)
+            document.getElementById('searchStudentForm').onsubmit = function(e) {
+                e.preventDefault();
+                var searchTeamId = document.getElementById('search_team_id').value.trim();
+                var searchTeacherId = document.getElementById('search_teacher_id').value.trim();
+                var searchAwardId = document.getElementById('search_award_id').value.trim();
+                var rows = document.querySelectorAll('#studentsTbody tr');
+                var found = false;
+                var resultHtml = '';
+                // 先移除所有高亮
+                rows.forEach(function(row) {
+                    row.classList.remove('search-highlight');
+                    Array.from(row.children).forEach(function(td) {
+                        td.style.backgroundColor = '';
                     });
-                    setTimeout(function(row, tds){
-                        row.classList.remove('search-highlight');
-                        Array.from(tds).forEach(function(td) { td.style.backgroundColor = ''; });
-                    }, 2000, rows[i], tds);
-                    resultHtml = '<div class="alert alert-success">找到學生參賽記錄：<br>' +
-                        '隊伍編號: ' + tds[0].innerText + '<br>' +
-                        '組員學號: ' + tds[1].innerText + '<br>' +
-                        '老師編號: ' + tds[2].innerText + '<br>' +
-                        '獲獎記錄編號: ' + tds[3].innerText + '<br>' +
-                        '比賽名字: ' + tds[4].innerText + '<br>' +
-                        '參賽類別: ' + tds[5].innerText + '</div>';
-                    break;
+                });
+                for (var i = 0; i < rows.length; i++) {
+                    var tds = rows[i].getElementsByTagName('td');
+                    if (tds.length && (
+                        (searchTeamId && tds[0].innerText === searchTeamId) ||
+                        (searchTeacherId && tds[2].innerText === searchTeacherId) ||
+                        (searchAwardId && tds[3].innerText === searchAwardId)
+                    )) {
+                        found = true;
+                        // 滾動到該學生參賽資料列
+                        rows[i].scrollIntoView({behavior: 'smooth', block: 'center'});
+                        // 高亮整列
+                        rows[i].classList.add('search-highlight');
+                        Array.from(tds).forEach(function(td) {
+                            td.style.backgroundColor = '#ffe066';
+                        });
+                        setTimeout(function(row, tds){
+                            row.classList.remove('search-highlight');
+                            Array.from(tds).forEach(function(td) { td.style.backgroundColor = ''; });
+                        }, 2000, rows[i], tds);
+                        resultHtml = '<div class="alert alert-success">找到學生參賽記錄：<br>' +
+                            '隊伍編號: ' + tds[0].innerText + '<br>' +
+                            '組員學號: ' + tds[1].innerText + '<br>' +
+                            '老師編號: ' + tds[2].innerText + '<br>' +
+                            '獲獎記錄編號: ' + tds[3].innerText + '<br>' +
+                            '比賽名字: ' + tds[4].innerText + '<br>' +
+                            '參賽類別: ' + tds[5].innerText + '</div>';
+                        break;
+                    }
                 }
-            }
-            if (!found) {
-                resultHtml = '<div class="alert alert-danger">該參賽記錄不存在</div>';
-            }
-            document.getElementById('searchResult').innerHTML = resultHtml;
-        };
+                if (!found) {
+                    resultHtml = '<div class="alert alert-danger">該參賽記錄不存在</div>';
+                }
+                document.getElementById('searchResult').innerHTML = resultHtml;
+            };
+        });
     </script>
 </body>
 </html>
