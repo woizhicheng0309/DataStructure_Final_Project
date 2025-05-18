@@ -12,7 +12,7 @@
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="dashboard.php">
-                <h1 style="color: black; font-size: 24px;">逢甲大學系網</h1>
+                <h1 style="color: black; font-size: 24px;">逢甲大學資訊系網</h1>
             </a>
         </div>
     </div>
