@@ -8,14 +8,14 @@ if(strlen($_SESSION['alogin'])==0)
 }
 else {
     if(isset($_POST['add'])) {
-        $professorId = $_POST['professorId'];
+        $teacherId = $_POST['teacherId'];
         $subject = $_POST['subject'];
         $venue = $_POST['venue'];
         $schedule = $_POST['schedule'];
 
-        $sql = "INSERT INTO tbltimetables (ProfessorId, Subject, Venue, Schedule) VALUES (:professorId, :subject, :venue, :schedule)";
+        $sql = "INSERT INTO tbltimetables (TeacherId, Subject, Venue, Schedule) VALUES (:teacherId, :subject, :venue, :schedule)";
         $query = $dbh->prepare($sql);
-        $query->bindParam(':professorId', $professorId, PDO::PARAM_STR);
+        $query->bindParam(':teacherId', $teacherId, PDO::PARAM_STR);
         $query->bindParam(':subject', $subject, PDO::PARAM_STR);
         $query->bindParam(':venue', $venue, PDO::PARAM_STR);
         $query->bindParam(':schedule', $schedule, PDO::PARAM_STR);
@@ -40,9 +40,9 @@ else {
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Manage Timetables</title>
-    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
-    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/font-awesome.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <?php include('../includes/header.php');?>
@@ -74,8 +74,8 @@ else {
                     <div class="panel-body">
                         <form method="post">
                             <div class="form-group">
-                                <label>Professor ID</label>
-                                <input class="form-control" type="text" name="professorId" required />
+                                <label>Teacher ID</label>
+                                <input class="form-control" type="text" name="teacherId" required />
                             </div>
                             <div class="form-group">
                                 <label>Subject</label>
@@ -102,7 +102,7 @@ else {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Professor ID</th>
+                                    <th>Teacher ID</th>
                                     <th>Subject</th>
                                     <th>Venue</th>
                                     <th>Schedule</th>
@@ -121,7 +121,7 @@ else {
                                 ?>
                                 <tr>
                                     <td><?php echo htmlentities($cnt); ?></td>
-                                    <td><?php echo htmlentities($result->ProfessorId); ?></td>
+                                    <td><?php echo htmlentities($result->TeacherId); ?></td>
                                     <td><?php echo htmlentities($result->Subject); ?></td>
                                     <td><?php echo htmlentities($result->Venue); ?></td>
                                     <td><?php echo htmlentities($result->Schedule); ?></td>

@@ -44,9 +44,9 @@ else {
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Manage Experiences</title>
-    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
-    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/font-awesome.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <?php include('../includes/header.php');?>

@@ -1,5 +1,4 @@
-﻿
-/*=============================================================
+﻿/*=============================================================
     Authour URI: www.binarytheme.com
     License: Commons Attribution 3.0
 
@@ -34,7 +33,6 @@
 
 
 
-
         },
 
     }
@@ -42,7 +40,14 @@
    
     $(document).ready(function () {
         mainApp.slide_fun();
-        mainApp.dataTable_fun();
+        
+        // Ensure DataTables library is loaded before calling dataTable_fun
+        if ($.fn.dataTable) {
+            mainApp.dataTable_fun();
+        } else {
+            console.error('DataTables library is not loaded. Please check the script inclusion.');
+        }
+        
         mainApp.custom_fun();
     });
 }(jQuery));

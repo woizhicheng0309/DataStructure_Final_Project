@@ -9,15 +9,15 @@ if(strlen($_SESSION['alogin'])==0)
 else {
     if(isset($_POST['add'])) {
         $assignmentId = $_POST['assignmentId'];
-        $professorId = $_POST['professorId'];
+        $teacherId = $_POST['teacherId'];
         $courseName = $_POST['courseName'];
         $classroom = $_POST['classroom'];
         $schedule = $_POST['schedule'];
 
-        $sql = "INSERT INTO tblteachingassignments (AssignmentId, ProfessorId, CourseName, Classroom, Schedule) VALUES (:assignmentId, :professorId, :courseName, :classroom, :schedule)";
+        $sql = "INSERT INTO tblteachingassignments (AssignmentId, TeacherId, CourseName, Classroom, Schedule) VALUES (:assignmentId, :teacherId, :courseName, :classroom, :schedule)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':assignmentId', $assignmentId, PDO::PARAM_STR);
-        $query->bindParam(':professorId', $professorId, PDO::PARAM_STR);
+        $query->bindParam(':teacherId', $teacherId, PDO::PARAM_STR);
         $query->bindParam(':courseName', $courseName, PDO::PARAM_STR);
         $query->bindParam(':classroom', $classroom, PDO::PARAM_STR);
         $query->bindParam(':schedule', $schedule, PDO::PARAM_STR);
@@ -42,9 +42,9 @@ else {
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Manage Teaching Assignments</title>
-    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
-    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/font-awesome.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 <?php include('../includes/header.php');?>
@@ -80,8 +80,8 @@ else {
                                 <input class="form-control" type="text" name="assignmentId" required />
                             </div>
                             <div class="form-group">
-                                <label>Professor ID</label>
-                                <input class="form-control" type="text" name="professorId" required />
+                                <label>Teacher ID</label>
+                                <input class="form-control" type="text" name="teacherId" required />
                             </div>
                             <div class="form-group">
                                 <label>Course Name</label>
@@ -109,7 +109,7 @@ else {
                                 <tr>
                                     <th>#</th>
                                     <th>Assignment ID</th>
-                                    <th>Professor ID</th>
+                                    <th>Teacher ID</th>
                                     <th>Course Name</th>
                                     <th>Classroom</th>
                                     <th>Schedule</th>
@@ -129,7 +129,7 @@ else {
                                 <tr>
                                     <td><?php echo htmlentities($cnt); ?></td>
                                     <td><?php echo htmlentities($result->AssignmentId); ?></td>
-                                    <td><?php echo htmlentities($result->ProfessorId); ?></td>
+                                    <td><?php echo htmlentities($result->TeacherId); ?></td>
                                     <td><?php echo htmlentities($result->CourseName); ?></td>
                                     <td><?php echo htmlentities($result->Classroom); ?></td>
                                     <td><?php echo htmlentities($result->Schedule); ?></td>

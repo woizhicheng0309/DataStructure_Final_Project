@@ -4,7 +4,7 @@
         <!-- Removed the title -->
     </div>
     <div class="header-right" style="text-align: right;">
-        <a href="logout.php" class="btn btn-danger" title="登出">登出</a>
+        <a href="/Online-Library-Management-System-PHP/library/index.php" class="btn btn-danger" title="登出">登出</a>
     </div>
 </nav>
 <!-- Updated navigation menu to align with the SQL structure -->
@@ -12,7 +12,7 @@
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="dashboard.php">
-                <h1 style="color: black; font-size: 24px;">大学系网</h1>
+                <h1 style="color: black; font-size: 24px;">大學系網</h1>
             </a>
         </div>
     </div>
@@ -22,11 +22,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="navbar-collapse collapse">
-                    <ul id="menu-top" class="nav navbar-nav navbar-right">
-                        <li><a href="dashboard.php">仪表板</a></li>
-                        <li><a href="manage-professors.php">管理教授</a></li>
-                        <li><a href="manage-students.php">管理學生</a></li>
-                    </ul>
+                    <?php
+                    if (isset($_SESSION['alogin'])) {
+                        // 管理員登入後顯示的功能
+                        echo '<ul id="menu-top" class="nav navbar-nav navbar-right">';
+                        echo '<li><a href="dashboard.php">儀表板</a></li>';
+                        echo '<li><a href="manage-professors.php">管理老師</a></li>';
+                        echo '<li><a href="manage-students.php">管理學生</a></li>';
+                        echo '<li><a href="manage-mentored-awards.php">管理學生參賽</a></li>';
+                        echo '</ul>';
+                    }
+                    ?>
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ if (!isset($_SESSION['delmsg'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Manage Students</title>
+    <title>管理學生</title>
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
@@ -40,7 +40,7 @@ if (!isset($_SESSION['delmsg'])) {
         <div class="container">
             <div class="row pad-botm">
                 <div class="col-md-12">
-                    <h4 class="header-line">Manage Students</h4>
+                    <h4 class="header-line">管理學生</h4>
                 </div>
             </div>
             <div class="row">
@@ -57,7 +57,7 @@ if (!isset($_SESSION['delmsg'])) {
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Students Listing
+                            學生列表
                             <div class="pull-right">
                                 <button id="showAddForm" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> 新增</button>
                                 <button id="showSearchForm" class="btn btn-info btn-sm"><i class="fa fa-search"></i> 查詢</button>
@@ -67,19 +67,19 @@ if (!isset($_SESSION['delmsg'])) {
                             <div id="addFormContainer" style="display:none; margin-bottom:20px;">
                                 <form id="addStudentForm" class="form-inline" method="post" action="">
                                     <div class="form-group">
-                                        <label for="student_id">Student ID:</label>
+                                        <label for="student_id">學生ID:</label>
                                         <input type="text" class="form-control" id="student_id" name="student_id" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Name:</label>
+                                        <label for="name">名字:</label>
                                         <input type="text" class="form-control" id="name" name="name" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="class">Class:</label>
+                                        <label for="class">班級:</label>
                                         <input type="text" class="form-control" id="class" name="class" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="department">Department:</label>
+                                        <label for="department">系所:</label>
                                         <input type="text" class="form-control" id="department" name="department" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">儲存</button>
@@ -89,7 +89,7 @@ if (!isset($_SESSION['delmsg'])) {
                             <div id="searchFormContainer" style="display:none; margin-bottom:20px;">
                                 <form id="searchStudentForm" class="form-inline">
                                     <div class="form-group">
-                                        <label for="search_student_id">Student ID:</label>
+                                        <label for="search_student_id">學生ID:</label>
                                         <input type="text" class="form-control" id="search_student_id" name="search_student_id" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">查詢</button>
@@ -101,18 +101,17 @@ if (!isset($_SESSION['delmsg'])) {
                                 <table class="table table-striped table-bordered table-hover" id="studentsTable">
                                     <thead>
                                         <tr>
-                                            <th>編號</th>
-                                            <th>Student ID</th>
-                                            <th>Name</th>
-                                            <th>Class</th>
-                                            <th>Department</th>
+                                            <th>學生編號</th>
+                                            <th>名字</th>
+                                            <th>班級</th>
+                                            <th>系所</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
                                     <tbody id="studentsTbody">
                                         <!-- 這裡將來可放查詢結果或資料列 -->
                                         <tr>
-                                            <td colspan="6" class="text-center">請使用上方按鈕新增、查詢學生資料</td>
+                                            <td colspan="5" class="text-center">請使用上方按鈕新增、查詢學生資料</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -150,10 +149,10 @@ if (!isset($_SESSION['delmsg'])) {
             btn.onclick = function() {
                 // 取得目前資料
                 var tds = tr.getElementsByTagName('td');
-                var studentId = tds[1].innerText;
-                var name = tds[2].innerText;
-                var className = tds[3].innerText;
-                var department = tds[4].innerText;
+                var studentId = tds[0].innerText;
+                var name = tds[1].innerText;
+                var className = tds[2].innerText;
+                var department = tds[3].innerText;
                 // 將資料填入表單
                 document.getElementById('student_id').value = studentId;
                 document.getElementById('name').value = name;
@@ -202,12 +201,12 @@ if (!isset($_SESSION['delmsg'])) {
             if(isEditing && editIndex) {
                 // 修改現有列
                 var tr = tbody.rows[editIndex-1];
-                tr.cells[1].innerText = studentId;
-                tr.cells[2].innerText = name;
-                tr.cells[3].innerText = className;
-                tr.cells[4].innerText = department;
+                tr.cells[0].innerText = studentId;
+                tr.cells[1].innerText = name;
+                tr.cells[2].innerText = className;
+                tr.cells[3].innerText = department;
                 // 重建操作欄
-                var actionTd = tr.cells[5];
+                var actionTd = tr.cells[4];
                 actionTd.innerHTML = '';
                 actionTd.appendChild(createEditButton(tr));
                 actionTd.appendChild(createDeleteButton(tr));
@@ -220,16 +219,14 @@ if (!isset($_SESSION['delmsg'])) {
                 if(defaultRow) tbody.removeChild(defaultRow.parentNode);
                 // 新增資料列
                 var tr = document.createElement('tr');
-                var number = tbody.children.length + 1;
-                tr.innerHTML = '<td>' + number + '</td>' +
-                               '<td>' + studentId + '</td>' +
+                tr.innerHTML = '<td>' + studentId + '</td>' +
                                '<td>' + name + '</td>' +
                                '<td>' + className + '</td>' +
                                '<td>' + department + '</td>' +
                                '<td></td>';
                 // 加入修改按鈕
-                tr.cells[5].appendChild(createEditButton(tr));
-                tr.cells[5].appendChild(createDeleteButton(tr));
+                tr.cells[4].appendChild(createEditButton(tr));
+                tr.cells[4].appendChild(createDeleteButton(tr));
                 tbody.appendChild(tr);
             }
             // 重新編號
@@ -268,7 +265,7 @@ if (!isset($_SESSION['delmsg'])) {
             });
             for (var i = 0; i < rows.length; i++) {
                 var tds = rows[i].getElementsByTagName('td');
-                if (tds.length && tds[1].innerText === searchId) {
+                if (tds.length && tds[0].innerText === searchId) {
                     found = true;
                     // 滾動到該學生資料列
                     rows[i].scrollIntoView({behavior: 'smooth', block: 'center'});
@@ -283,8 +280,8 @@ if (!isset($_SESSION['delmsg'])) {
                     }, 2000, rows[i], tds);
                     resultHtml = '<div class="alert alert-success">找到學生：<br>' +
                         '編號: ' + tds[0].innerText + '<br>' +
-                        'Student ID: ' + tds[1].innerText + '<br>' +
-                        'Name: ' + tds[2].innerText + '<br>' +
+                        '學生ID: ' + tds[1].innerText + '<br>' +
+                        '名字: ' + tds[2].innerText + '<br>' +
                         'Class: ' + tds[3].innerText + '<br>' +
                         'Department: ' + tds[4].innerText + '</div>';
                     break;
