@@ -7,14 +7,16 @@
         <a href="/Online-Library-Management-System-PHP/library/index.php" class="btn btn-danger" title="登出">登出</a>
     </div>
 </nav>
-<!-- Updated navigation menu to align with the SQL structure -->
+<!-- Updated navigation menu to conditionally hide the entire field when admin is logged in -->
 <nav class="navbar navbar-inverse set-radius-zero" role="navigation">
     <div class="container">
+        <?php if (!isset($_SESSION['alogin'])): ?>
         <div class="navbar-header">
             <a class="navbar-brand" href="dashboard.php">
                 <h1 style="color: black; font-size: 24px;">大學系網</h1>
             </a>
         </div>
+        <?php endif; ?>
     </div>
 </nav>
 <section class="menu-section">
