@@ -30,6 +30,8 @@
                         echo '<li><a href="manage-professors.php">管理老師</a></li>';
                         echo '<li><a href="manage-students.php">管理學生</a></li>';
                         echo '<li><a href="manage-mentored-awards.php">管理學生參賽</a></li>';
+                        echo '<li><a href="manage-publications.php">管理論文</a></li>';
+                        echo '<li><a href="manage-timetable.php">管理老師課表</a></li>';
                         echo '</ul>';
                     }
                     ?>
