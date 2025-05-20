@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 include('../includes/config.php');
@@ -65,7 +64,23 @@ if (!isset($_SESSION['delmsg'])) {
                                 </div>
                                 <div class="form-group">
                                     <label for="class_time">上課時間</label>
-                                    <input type="text" class="form-control" id="class_time" name="上課時間" required>
+                                    <select class="form-control" id="class_time" name="上課時間[]" multiple required style="min-width:180px; height:120px;">
+                                        <option value="8:10-9:00">8:10-9:00</option>
+                                        <option value="9:10-10:00">9:10-10:00</option>
+                                        <option value="10:10-11:00">10:10-11:00</option>
+                                        <option value="11:10-12:00">11:10-12:00</option>
+                                        <option value="12:10-13:00">12:10-13:00</option>
+                                        <option value="13:10-14:00">13:10-14:00</option>
+                                        <option value="14:10-15:00">14:10-15:00</option>
+                                        <option value="15:10-16:00">15:10-16:00</option>
+                                        <option value="16:10-17:00">16:10-17:00</option>
+                                        <option value="17:10-18:00">17:10-18:00</option>
+                                        <option value="18:30-19:20">18:30-19:20</option>
+                                        <option value="19:25-20:15">19:25-20:15</option>
+                                        <option value="20:25-21:15">20:25-21:15</option>
+                                        <option value="21:20-22:10">21:20-22:10</option>
+                                    </select>
+                                    <small class="text-muted">可按住 Ctrl 或 Shift 選擇多節連續時段</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="classroom">上課教室</label>
@@ -198,7 +213,40 @@ var addForm = document.getElementById('addTimetableForm');
 addForm.onsubmit = function(e) {
     e.preventDefault();
     var teacherId = document.getElementById('teacher_id').value;
-    var classTime = document.getElementById('class_time').value;
+    var classTimeSelect = document.getElementById('class_time');
+    var selected = Array.from(classTimeSelect.selectedOptions).map(opt => opt.value);
+    if (selected.length === 0) {
+        alert('請選擇上課時間');
+        return;
+    }
+    // 自動合併連續時段
+    var timeMap = [
+        '8:10-9:00', '9:10-10:00', '10:10-11:00', '11:10-12:00',
+        '12:10-13:00', '13:10-14:00', '14:10-15:00', '15:10-16:00',
+        '16:10-17:00', '17:10-18:00', '18:30-19:20', '19:25-20:15',
+        '20:25-21:15', '21:20-22:10'
+    ];
+    // 依照 timeMap 排序
+    selected.sort((a, b) => timeMap.indexOf(a) - timeMap.indexOf(b));
+    // 檢查是否為連續時段
+    var startIdx = timeMap.indexOf(selected[0]);
+    var isContinuous = true;
+    for (var i = 1; i < selected.length; i++) {
+        if (timeMap.indexOf(selected[i]) !== startIdx + i) {
+            isContinuous = false;
+            break;
+        }
+    }
+    var classTime;
+    if (isContinuous) {
+        // 合併為一個區間
+        var start = selected[0].split('-')[0];
+        var end = selected[selected.length - 1].split('-')[1];
+        classTime = start + '-' + end;
+    } else {
+        // 不連續則用逗號分隔
+        classTime = selected.join(',');
+    }
     var classroom = document.getElementById('classroom').value;
     var isEditing = addForm.getAttribute('data-editing') === 'true';
     var formData = new FormData();
