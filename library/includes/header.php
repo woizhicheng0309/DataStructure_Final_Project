@@ -33,6 +33,7 @@
                         echo '<li><a href="manage-publications.php">管理論文</a></li>';
                         echo '<li><a href="manage-book-papers.php">管理專書論文</a></li>';
                         echo '<li><a href="manage-conference-papers.php">管理會議論文</a></li>';
+                        echo '<li><a href="manage-journal-papers.php">管理期刊論文</a></li>';
                         echo '<li><a href="manage-timetable.php">管理老師課表</a></li>';
                         echo '</ul>';
                     }
