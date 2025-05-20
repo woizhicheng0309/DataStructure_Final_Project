@@ -31,6 +31,8 @@
                         echo '<li><a href="manage-students.php">管理學生</a></li>';
                         echo '<li><a href="manage-mentored-awards.php">管理學生參賽</a></li>';
                         echo '<li><a href="manage-publications.php">管理論文</a></li>';
+                        echo '<li><a href="manage-book-papers.php">管理專書論文</a></li>';
+                        echo '<li><a href="manage-conference-papers.php">管理會議論文</a></li>';
                         echo '<li><a href="manage-timetable.php">管理老師課表</a></li>';
                         echo '</ul>';
                     }
