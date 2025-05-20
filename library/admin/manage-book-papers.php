@@ -76,7 +76,15 @@ if (!isset($_SESSION['delmsg'])) {
                                 </div>
                                 <div class="form-group">
                                     <label for="pub_year">出版年份</label>
-                                    <input type="text" class="form-control" id="pub_year" name="出版年份" required>
+                                    <select class="form-control" id="pub_year" name="出版年份" required>
+                                        <option value="">請選擇年份</option>
+                                        <?php
+                                        $currentYear = date('Y');
+                                        for ($y = $currentYear; $y >= 1950; $y--) {
+                                            echo '<option value="' . $y . '">' . $y . '</option>';
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="author">作者</label>
