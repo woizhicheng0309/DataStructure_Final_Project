@@ -35,6 +35,8 @@
                         echo '<li><a href="manage-conference-papers.php">管理會議論文</a></li>';
                         echo '<li><a href="manage-journal-papers.php">管理期刊論文</a></li>';
                         echo '<li><a href="manage-timetable.php">管理老師課表</a></li>';
+                        echo '<li><a href="manage-internal-experiences.php">管理教師校內經歷</a></li>';
+                        echo '<li><a href="manage-external-experiences.php">管理老師校外經歷</a></li>';
                         echo '</ul>';
                     }
                     ?>
