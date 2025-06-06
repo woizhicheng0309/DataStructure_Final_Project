@@ -37,6 +37,8 @@
                         echo '<li><a href="manage-timetable.php">管理老師課表</a></li>';
                         echo '<li><a href="manage-internal-experiences.php">管理教師校內經歷</a></li>';
                         echo '<li><a href="manage-external-experiences.php">管理老師校外經歷</a></li>';
+                        echo '<li><a href="manage-teacher-lectures.php">管理老師演講</a></li>';
+                        echo '<li><a href="manage-teacher-plans.php">管理老師計劃</a></li>';
                         echo '</ul>';
                     }
                     ?>
