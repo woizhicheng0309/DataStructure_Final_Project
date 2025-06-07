@@ -1,5 +1,155 @@
--- 教師資料表結構
--- 這個SQL檔案用於創建教師相關的資料表
+-- 老師 (Teachers)
+CREATE TABLE 老師 (
+    老師編號 INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    信箱 VARCHAR(100),
+    分機 VARCHAR(10),
+    學歷 VARCHAR(100),
+    課表時間 VARCHAR(100),
+    專長 VARCHAR(255),
+    類別 VARCHAR(50)
+);
+
+-- 老師校內經歷 (Internal Experience)
+CREATE TABLE 老師校內經歷 (
+    老師編號 INT,
+    部門 VARCHAR(100),
+    職位 VARCHAR(100),
+    PRIMARY KEY (老師編號, 部門, 職位),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師校外經歷 (External Experience)
+CREATE TABLE 老師校外經歷 (
+    老師編號 INT,
+    機構名稱 VARCHAR(100),
+    職位 VARCHAR(100),
+    PRIMARY KEY (老師編號, 機構名稱, 職位),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 論文 (Papers) — UPDATED STRUCTURE
+CREATE TABLE 論文 (
+    論文標號 INT PRIMARY KEY,
+    論文編號 VARCHAR(100),
+    發表日期 DATE,
+    論文標題 VARCHAR(255),
+    老師編號 INT,
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 會議論文 (Conference Papers)
+CREATE TABLE 會議論文 (
+    論文標號 INT PRIMARY KEY,
+    會議名稱 VARCHAR(255),
+    會議地點 VARCHAR(100),
+    發佈日期 DATE,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 期刊論文 (Journal Papers)
+CREATE TABLE 期刊論文 (
+    論文標號 INT PRIMARY KEY,
+    期刊名字 VARCHAR(255),
+    發佈日期 DATE,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 專書論文 (Book Papers)
+CREATE TABLE 專書論文 (
+    論文標號 INT PRIMARY KEY,
+    書名 VARCHAR(255),
+    ISBN VARCHAR(50),
+    出版社 VARCHAR(100),
+    出版年份 INT,
+    作者 VARCHAR(255),
+    FOREIGN KEY (論文標號) REFERENCES 論文(論文標號)
+);
+
+-- 學生 (Students)
+CREATE TABLE 學生 (
+    學生學號 INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    系所 VARCHAR(100),
+    班級 VARCHAR(50)
+);
+
+-- 學生參賽 (Student Competition Participation)
+CREATE TABLE 學生參賽 (
+    隊伍編號 INT,
+    組員學號 INT,
+    老師編號 INT,
+    獲獎記錄編號 INT,
+    比賽名字 VARCHAR(100),
+    參賽類別 VARCHAR(50),
+    PRIMARY KEY (隊伍編號, 組員學號, 老師編號),
+    FOREIGN KEY (組員學號) REFERENCES 學生(學生學號),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師帶隊獲獎 (Teacher-Led Awards)
+CREATE TABLE 老師帶隊獲獎 (
+    老師編號 INT,
+    獲獎記錄編號 INT,
+    PRIMARY KEY (老師編號, 獲獎記錄編號),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 核准專利 (Patents)
+CREATE TABLE 核准專利 (
+    專利編號 INT PRIMARY KEY,
+    老師編號 INT,
+    名稱 VARCHAR(255),
+    類型 VARCHAR(100),
+    申請日期 DATE,
+    核准日期 DATE,
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師演講 (Lectures)
+CREATE TABLE 老師演講 (
+    老師編號 INT,
+    演講名稱 VARCHAR(255),
+    地點 VARCHAR(100),
+    日期 DATE,
+    PRIMARY KEY (老師編號, 演講名稱),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師計劃 (Research Projects)
+CREATE TABLE 老師計劃 (
+    計劃編號 INT PRIMARY KEY,
+    老師編號 INT,
+    分類 VARCHAR(50),
+    研究主題 VARCHAR(255),
+    研究開始日期 DATE,
+    研究結束日期 DATE,
+    資助機構 VARCHAR(100),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師專長 (Expertise)
+CREATE TABLE 老師專長 (
+    老師編號 INT,
+    專長項目 VARCHAR(100),
+    PRIMARY KEY (老師編號, 專長項目),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- 老師課表 (Class Schedules) — ADDED 上課教室
+CREATE TABLE 老師課表 (
+    老師編號 INT,
+    上課時間 VARCHAR(100),
+    上課教室 VARCHAR(100),
+    PRIMARY KEY (老師編號, 上課時間),
+    FOREIGN KEY (老師編號) REFERENCES 老師(老師編號)
+);
+
+-- ========================================
+-- 新版教師系統資料表 (New Faculty System Tables)
+-- ========================================
 
 -- 創建教師基本資料表
 CREATE TABLE IF NOT EXISTS `faculty_members` (
@@ -115,6 +265,10 @@ CREATE TABLE IF NOT EXISTS `faculty_awards` (
     KEY `idx_faculty_id` (`faculty_id`),
     FOREIGN KEY (`faculty_id`) REFERENCES `faculty_members`(`faculty_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='教師獲獎表';
+
+-- ========================================
+-- 新版教師系統測試資料 (Faculty System Sample Data)
+-- ========================================
 
 -- 插入測試資料
 INSERT INTO `faculty_members` (`faculty_id`, `name`, `name_en`, `category`, `extension`, `email`, `office`, `research_interests`) VALUES

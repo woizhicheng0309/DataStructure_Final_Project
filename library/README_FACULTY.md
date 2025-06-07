@@ -41,7 +41,7 @@ library/
 ├── api/
 │   └── get_faculty_data.php    # 教師資料API
 ├── database/
-│   ├── faculty_table.sql       # 資料表結構和測試資料
+│   ├── library.sql.txt          # 完整資料表結構和測試資料 (包含教師系統)
 │   └── setup.php              # 資料庫初始化腳本
 └── assets/
     └── img/
@@ -78,8 +78,9 @@ library/
 
 ### 1. 資料庫設定
 1. 確保XAMPP已啟動MySQL服務
-2. 訪問 `http://localhost/Online-Library-Management-System-PHP/library/database/setup.php`
-3. 執行資料庫初始化
+2. 資料庫結構已整合至 `database/library.sql.txt` 檔案中
+3. 訪問 `http://localhost/Online-Library-Management-System-PHP/library/database/setup.php` 執行資料庫初始化
+4. 系統將自動創建所有必要的教師相關資料表並插入測試資料
 
 ### 2. 測試系統
 1. 前端頁面：`http://localhost/Online-Library-Management-System-PHP/library/faculty.php`

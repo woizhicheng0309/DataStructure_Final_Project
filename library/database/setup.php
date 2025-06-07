@@ -17,10 +17,8 @@ try {
     // 開始交易
     $dbh->beginTransaction();
 
-    echo "<p>正在創建教師相關資料表...</p>\n";
-
-    // 讀取並執行SQL檔案
-    $sqlFile = __DIR__ . '/faculty_table.sql';
+    echo "<p>正在創建教師相關資料表...</p>\n";    // 讀取並執行SQL檔案
+    $sqlFile = __DIR__ . '/library.sql.txt';
     if (!file_exists($sqlFile)) {
         throw new Exception("SQL檔案不存在：{$sqlFile}");
     }
