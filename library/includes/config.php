@@ -3,18 +3,56 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// DB credentials.
-define('DB_HOST','localhost');
-define('DB_USER','root');
-define('DB_PASS','');
-define('DB_NAME','library');
+// 檢測環境 - 如果是遠端伺服器則使用不同的設定
+$isRemoteServer = (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], '140.134.53.57') !== false);
+
+if ($isRemoteServer) {
+    // 遠端伺服器資料庫設定
+    define('DB_HOST','localhost');
+    define('DB_USER','D1299204');  // 使用學號作為資料庫使用者名稱
+    define('DB_PASS','#WcVh4FfF');          // 請填入您的資料庫密碼
+    define('DB_NAME','D1299204');  // 使用學號作為資料庫名稱
+} else {
+    // 本地XAMPP資料庫設定
+    define('DB_HOST','localhost');
+    define('DB_USER','root');
+    define('DB_PASS','');
+    define('DB_NAME','library');
+}
+
 // Establish database connection.
 try
 {
-$dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    $dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch (PDOException $e)
 {
-exit("Error: " . $e->getMessage());
+    // 更詳細的錯誤資訊，幫助診斷問題
+    echo "<div style='background:#f8d7da;color:#721c24;padding:15px;border:1px solid #f5c6cb;border-radius:4px;margin:10px;font-family:Arial,sans-serif;'>";
+    echo "<h3>🚫 資料庫連接錯誤</h3>";
+    echo "<p><strong>錯誤訊息:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>環境資訊:</strong> " . ($isRemoteServer ? '遠端伺服器' : '本地環境') . "</p>";
+    echo "<p><strong>當前設定:</strong></p>";
+    echo "<ul>";
+    echo "<li>主機: " . DB_HOST . "</li>";
+    echo "<li>使用者: " . DB_USER . "</li>";
+    echo "<li>資料庫: " . DB_NAME . "</li>";
+    echo "</ul>";
+    
+    if ($isRemoteServer) {
+        echo "<div style='background:#fff3cd;color:#856404;padding:10px;border:1px solid #ffeaa7;border-radius:4px;margin-top:10px;'>";
+        echo "<h4>🔧 遠端伺服器設定建議:</h4>";
+        echo "<ol>";
+        echo "<li>請確認您的學號 <code>D1299204</code> 是正確的資料庫使用者名稱</li>";
+        echo "<li>請聯繫系統管理員獲取正確的資料庫密碼</li>";
+        echo "<li>確認資料庫 <code>D1299204</code> 已經建立</li>";
+        echo "<li>確認使用者有建立表格的權限</li>";
+        echo "</ol>";
+        echo "<p><strong>修改方式:</strong> 編輯 <code>includes/config.php</code> 檔案中的資料庫設定</p>";
+        echo "</div>";
+    }
+    echo "</div>";
+    exit();
 }
 ?>
